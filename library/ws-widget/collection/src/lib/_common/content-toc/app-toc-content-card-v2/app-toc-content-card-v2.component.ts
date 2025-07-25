@@ -101,6 +101,7 @@ export class AppTocContentCardV2Component implements OnInit {
   pageScrollSubscription: Subscription | null = null
    selectedLang: any = null
   selectedLangCode: string = '' 
+  languageLength: any
 
   constructor(
     private events: EventService,
@@ -158,12 +159,15 @@ export class AppTocContentCardV2Component implements OnInit {
 }
 
   getCourseLanguage() {
+    console.log('getCourseLanguage called++++++++++++++++++')
     const contentId = this.content?.parent
     if (contentId) {
       this.contentSvc?.getContent(contentId).subscribe((data: any) => {
+        console.log(data, 'data from getContent==========')
         if (data && data.result && data.result.content && data.result.content.languageMapV1) {
           // return data.result.content.language
           const languageMapV1 = data.result.content.languageMapV1 || {}
+          console.log(languageMapV1, 'languageMapV1 from getContent')
 
           this.languageList = Object.entries(languageMapV1)
             .filter(([_, val]: [string, any]) => val.status === "live")
@@ -172,8 +176,12 @@ export class AppTocContentCardV2Component implements OnInit {
               id: val.id,
               status: val.status
             }))
+          
           // this.getLangArray(languageMapV1)
         }
+        this.languageLength = this.languageList?.length || 0
+          console.log(this.languageList, "this.languageList===")
+          console.log(this.languageList.length, 'languageLength from getCourseLanguage')
 
       })
     }

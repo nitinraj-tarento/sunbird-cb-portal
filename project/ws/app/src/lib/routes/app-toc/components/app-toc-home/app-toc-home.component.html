@@ -388,7 +388,7 @@
               <ws-widget-skeleton-loader [width]="'70%'" [height]="'32px'"
                 [bindingClass]="'rounded blue-2-loader'"></ws-widget-skeleton-loader>
             </ng-container>
-            <ng-container *ngIf="!skeletonLoader">
+            <ng-container *ngIf="!skeletonLoader && languageLength && languageLength > 0">
               <div class="banner-text text-base sm:text-4xl leading-6 sm:leading-10 font-bold nodtranslate">{{
                 handleCapitalize(content?.name) }}</div>
               <div class="text-sm sm:text-base source-text font-semibold break-words nodtranslate" #contentSource
@@ -397,8 +397,9 @@
 
               <div class="lang-chip-list">
                 <p class="mat-subheading-2 text-white">Select a language to view the Table of Contents in that language. Titles and content will update automatically.</p>
-                <a class="lang-mat-chip" *ngFor="let lang of firstSixLang" (click)="onLanguageClick(lang)">
-                {{ lang.name }}
+                <a class="lang-mat-chip" [ngClass]="{'active-chip': selectedLangName === lang.name.toLowerCase()}"
+                 *ngFor="let lang of firstSixLang" (click)="onLanguageClick(lang)">
+                {{ lang.name | titlecase }}
                 
               </a>
                <a (click)="openLanguageDialog($event)" class="open-dialog-btn" *ngIf="displayMoreBtn">

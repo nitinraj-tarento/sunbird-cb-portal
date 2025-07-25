@@ -29,6 +29,9 @@ export class YoutubeComponent implements OnInit {
   @Input() isScreenSizeLtMedium = false
   @Input() isPreviewMode = false
   @Input() languageList: any = []
+  @Input() languageLength: any = 0
+  @Input() selectedLang: any = null
+
   selectedLanguage: any = null
   isTypeOfCollection = false
   isRestricted = false
@@ -61,6 +64,7 @@ export class YoutubeComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    console.log(this.languageLength, 'languageLength from youtube component')
     if (window.innerWidth <= 1200) {
       this.isMobile = true
     } else {
@@ -99,7 +103,7 @@ export class YoutubeComponent implements OnInit {
     //  this.selectedLanguage = langObj
     //  console.log(langObj, 'langObj')
     }
-    console.log(this.selectedLanguage, 'selectedLang from query params on youtube component') // Log selected language
+    // console.log(this.selectedLanguage, 'selectedLang from query params on youtube component') // Log selected language
   })
 }
 

@@ -7,7 +7,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 })
 export class PlayerOverlayComponent implements OnInit {
 @Input() languageList: any = []
-  selectedLanguage: any = null
+@Input()  selectedLanguage: any = null
     @Output() languageSelected = new EventEmitter<any>()
 
   constructor(){}

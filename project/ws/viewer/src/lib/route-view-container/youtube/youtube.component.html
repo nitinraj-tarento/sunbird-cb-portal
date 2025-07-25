@@ -64,8 +64,9 @@
             <ws-widget-btn-content-feedback [forPreview]="forPreview"></ws-widget-btn-content-feedback> -->
           </div>
         </mat-card>
-        <div class="player-overlay">
-         <viewer-player-overlay [languageList]="languageList"
+        {{ languageLength | json }} ===============
+        <div class="player-overlay" *ngIf="languageLength && languageLength > 0">
+         <viewer-player-overlay [languageList]="languageList" [selectedLanguage]="selectedLanguage"
             (languageSelected)="onLanguageChange($event)">
           </viewer-player-overlay>
 

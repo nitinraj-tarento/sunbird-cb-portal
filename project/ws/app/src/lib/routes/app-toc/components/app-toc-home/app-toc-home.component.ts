@@ -250,6 +250,7 @@ export class AppTocHomeComponent implements OnInit, OnDestroy, AfterViewChecked,
   SAKSHAMAI_ICON_LOADER = '/assets/images/sakshamAI/saksham_ai_loader.gif'
   recommendedCoursesId = ''
   feedbackGiven: any
+  selectedLangName: any
   @HostListener('window:scroll', ['$event'])
   handleScroll() {
     const windowScroll = window.pageYOffset
@@ -343,6 +344,7 @@ export class AppTocHomeComponent implements OnInit, OnDestroy, AfterViewChecked,
 
   ngOnInit() {
     // this.getCourseLanguage()
+    console.log(this.contentReadData, 'contentReadData from app toc home')
     this.dataTransferSvc.setEnrollData(null)
     this.mobile1200 = window.innerWidth < 1201
     this.configSvc.languageTranslationFlag.subscribe((data: any) => {
@@ -386,6 +388,7 @@ export class AppTocHomeComponent implements OnInit, OnDestroy, AfterViewChecked,
           this.courseID = data.content.data.identifier
           this.tocSvc.fetchGetContentData(data.content.data.identifier).subscribe(res => {
             this.contentReadData = res.result.content
+            console.log(this.contentReadData, 'contentReadData from app toc home ngOnInit')
             this.getCourseLanguage()
           }, (error: HttpErrorResponse) => {
             if (!error.ok) {
@@ -550,7 +553,8 @@ export class AppTocHomeComponent implements OnInit, OnDestroy, AfterViewChecked,
   // }
 
   handleEnrollment(event:any) {
-    if(this.contentReadData && this.contentReadData.languageMapV1 && this.getLanguageCount(this.contentReadData.languageMapV1) > 0) {
+    console.log("handleEnrollment called", event)
+    if(this.contentReadData && this.contentReadData.languageMapV1 && this.languageLength > 0) {
         this.openLangDialog(event)
     } else {
       this.handleAutoBatchAssign()
@@ -565,15 +569,36 @@ export class AppTocHomeComponent implements OnInit, OnDestroy, AfterViewChecked,
   }
 
   getCourseLanguage() {
+    const defaultLanguage = this.contentReadData?.language[0]
+    const defaultLanguageId = this.contentReadData?.identifier
+    console.log(defaultLanguage, 'defaultLanguage')
+    console.log(defaultLanguageId, 'defaultLanguageId')
+    this.selectedLangName = defaultLanguage?.toLowerCase() 
+    // const defaultLanguageObj = {
+    //   name: defaultLanguage,
+    //   id: defaultLanguageId,
+    //   status: 'live'
+    // }
     const languageMapV1 = this.contentReadData?.languageMapV1 || {}
-
+    console.log(languageMapV1, 'languageMapV1')
     this.languageList = Object.entries(languageMapV1)
       .filter(([_, val]: [string, any]) => val.status === "live")
       .map(([lang, val]: [string, any]) => ({
         name: lang,
         id: val.id,
-        status: val.status
+        status: val.status,
+        isBaseLanguage: val.isBaseLanguage 
       }))
+      // this.selectedLangName = this.languageList.find((value: any) => value.isBaseLanguage)
+      // console.log(this.selectedLangName, 'selectedLangName')
+
+       const baseLangObj = this.languageList.find((value: any) => value.isBaseLanguage)
+       console.log(baseLangObj, 'baseLangObj')
+  this.selectedLangName = baseLangObj?.name?.toLowerCase() || ''  // ✅ fallback if not found
+  console.log(this.selectedLangName, 'selectedLangName')
+
+    // this.languageList.unshift(defaultLanguageObj)
+    console.log(this.languageList, 'languageList')
     this.languageLength = this.languageList?.length
     if (this.languageLength <= 5) {
       this.firstSixLang = this.languageList
@@ -630,6 +655,7 @@ export class AppTocHomeComponent implements OnInit, OnDestroy, AfterViewChecked,
 
 
   onLanguageClick(lang: any): void {
+    this.selectedLangName = lang.name.toLowerCase()
     const langId = lang.id
     const status = lang.status
     // let contentType = this.content?.contentType    

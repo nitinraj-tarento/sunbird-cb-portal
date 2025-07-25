@@ -36,6 +36,8 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   courseId = this.activatedRoute?.snapshot?.queryParamMap?.get('collectionId')
   languageList: any
   selectedLang: any
+  selectedLangName: any
+  languageLength: any
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -136,12 +138,23 @@ export class YoutubeComponent implements OnInit, OnDestroy {
             .map(([lang, val]: [string, any]) => ({
               name: lang,
               id: val.id,
-              status: val.status
+              status: val.status,
+              isBaseLanguage: val.isBaseLanguage
             }))
+
+          const baseLangObj = this.languageList.find((value: any) => value.isBaseLanguage)
+          console.log(baseLangObj, 'baseLangObj')
+          this.selectedLangName = baseLangObj?.name?.toLowerCase() || ''  // ✅ fallback if not found
+          console.log(this.selectedLangName, 'selectedLangName')
+
+          // this.languageList.unshift(defaultLanguageObj)
+          console.log(this.languageList, 'languageList')
+          this.languageLength = this.languageList?.length
         }
 
       })
     }
+
   }
 
   onLanguageChange(lang: any) {
